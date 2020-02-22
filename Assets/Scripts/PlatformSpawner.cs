@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlatformSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject platformPrefab;
+
     [SerializeField] private Vector3 startPlatform;
     private Transform lastPlatform;
     private bool isRandomIntervalSelected;
@@ -19,11 +20,14 @@ public class PlatformSpawner : MonoBehaviour
     {
         while (true)
         {
-            interval = Random.Range(12.5f, 25.0f);
+            interval = Random.Range(6.0f, 24.0f);
             startPlatform.x += interval;
 
             GameObject platform = Instantiate(platformPrefab, startPlatform, Quaternion.identity);
-            platform.transform.localScale = new Vector2(Random.Range(0.75f, 2.0f), platform.transform.localScale.y);
+
+            float scaleFactor = Random.Range(1.0f, 2.0f);
+            ResetGoldenZoneDefaultSize(platform, scaleFactor);
+            platform.transform.localScale = new Vector2(scaleFactor, platform.transform.localScale.y);
 
             if (startPlatform.x > 10.0f)
             {
@@ -36,16 +40,24 @@ public class PlatformSpawner : MonoBehaviour
     private void SpawnRandomSizePrefab()
     {
         GameObject platform = Instantiate(platformPrefab, transform.position, Quaternion.identity);
-        platform.transform.localScale = new Vector2(Random.Range(0.75f, 1.5f), platform.transform.localScale.y);
+        float scaleFactor = Random.Range(1.0f, 2.0f);
+        platform.transform.localScale = new Vector2(scaleFactor, platform.transform.localScale.y);
+        ResetGoldenZoneDefaultSize(platform, scaleFactor);
 
         lastPlatform = platform.transform;
+    }
+
+    private void ResetGoldenZoneDefaultSize(GameObject platform, float factor)
+    {
+        Transform goldenZoneInPlatformPrefab = platform.transform.GetChild(0);
+        goldenZoneInPlatformPrefab.localScale = new Vector2(goldenZoneInPlatformPrefab.localScale.x / factor, goldenZoneInPlatformPrefab.localScale.y);
     }
 
     private void Update()
     {
         if (!isRandomIntervalSelected)
         {
-            interval = Random.Range(12.5f, 25.0f);
+            interval = Random.Range(6.0f, 24.0f);
             isRandomIntervalSelected = true;
         }
 

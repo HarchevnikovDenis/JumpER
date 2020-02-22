@@ -37,7 +37,7 @@ public class PlayerInput : MonoBehaviour
             isEndOfPlatform = true;
         }
 
-        if(isFilled && !isEndOfPlatform)
+        if(isFilled && !isEndOfPlatform && !GamestatsManager.isGameOver)
         {
             GoRightSidePlatform(platformTransform);
         }
@@ -53,13 +53,19 @@ public class PlayerInput : MonoBehaviour
     private void Jump()
     {
         rigidbody.velocity = new Vector2(0.0f, jumpForce * slider.value);
-        SpeedManager.speed = 7.5f;
+        GamestatsManager.speed = 7.5f;
     }
 
+    //Приземление
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Plane"))
         {
+            if (GamestatsManager.isInGoldenZone)            //Игрок упал точно в центр платформы
+            {
+                score.ExtraScore();
+            }
+
             isEndOfPlatform = false;
             platformTransform = collision.transform;
             isJump = false;
@@ -81,7 +87,7 @@ public class PlayerInput : MonoBehaviour
             isEndOfPlatform = true;
             isFilled = false;
             slider.value = 0.0f;
-            SpeedManager.speed = 0.0f;
+            GamestatsManager.speed = 0.0f;
 
             score.AddScore();
         }
