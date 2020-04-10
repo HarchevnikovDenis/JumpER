@@ -8,6 +8,9 @@ public class Score : MonoBehaviour
 {
     [SerializeField] private Text scoreText;
     [SerializeField] private Animator perfectLanding;
+    [SerializeField] private Text currentScore;
+    [SerializeField] private Text bestScore;
+    [SerializeField] private GameObject newScoreTitle;
     private Animator scoreAnimator;
 
     public int score { get; private set; }
@@ -28,5 +31,23 @@ public class Score : MonoBehaviour
     {
         score++;
         perfectLanding.SetTrigger("Perfect");
+    }
+
+    public void SetScoreTextInGameOverPanel()
+    {
+        currentScore.text = score.ToString();
+        int best = PlayerPrefs.GetInt("Best_Score", 0);
+
+        if (score > best)  //Установили новый рекорд
+        {
+            newScoreTitle.SetActive(true);
+            bestScore.text = score.ToString();
+            PlayerPrefs.SetInt("Best_Score", score);
+        }
+        else
+        {
+            newScoreTitle.SetActive(false);
+            bestScore.text = best.ToString();
+        }
     }
 }

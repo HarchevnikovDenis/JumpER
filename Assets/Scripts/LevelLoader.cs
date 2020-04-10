@@ -1,18 +1,22 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class LevelLoader : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Animator animator;
+
+    public void RestartLevel()
     {
-        
+        StartCoroutine(Restart());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator Restart()
     {
-        
+        animator.SetTrigger("CrossFade_End");
+
+        yield return new WaitForSeconds(0.45f);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

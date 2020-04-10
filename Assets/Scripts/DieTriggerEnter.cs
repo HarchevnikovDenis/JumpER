@@ -8,25 +8,26 @@ public class DieTriggerEnter : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject gamePlayPanel;
 
-    [SerializeField] private Text currentScore;
-    [SerializeField] private Text bestScore;
-    [SerializeField] private GameObject newScoreTitle;
-
     private Animator cameraAnimator;
     private Score score;
+    private GamestatsManager stats;
 
     private void Start()
     {
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
 
-        score = FindObjectOfType<Score>().GetComponent<Score>();
+        score = FindObjectOfType<Score>();
         if (score == null)
             Debug.LogError("Score is null");
+
+        stats = FindObjectOfType<GamestatsManager>();
+        if (stats == null)
+            Debug.LogError("GamestatsManager is null");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.GetComponent<PlayerInput>() && !GamestatsManager.isGameOver)
+        if(other.gameObject.GetComponent<PlayerInput>() && !stats.isGameOver)
         {
             Rigidbody2D player = other.gameObject.GetComponent<Rigidbody2D>();
 
@@ -35,16 +36,16 @@ public class DieTriggerEnter : MonoBehaviour
             else
                 DieAnimation(player);
 
-            GamestatsManager.isGameOver = true;
+            stats.isGameOver = true;
         }
     }
 
     //Игрок упал в пропасть
     private void DieAnimation(Rigidbody2D rb)
     {
-        GamestatsManager.speed = 0.0f;
+        stats.isMove = false;
         rb.velocity = new Vector2(0.0f, 5.0f);
-        rb.gameObject.GetComponent<EdgeCollider2D>().enabled = false;
+        rb.gameObject.GetComponent<BoxCollider2D>().enabled = false;
         Destroy(rb.gameObject, 5.0f);
 
         GameOver();
@@ -65,23 +66,6 @@ public class DieTriggerEnter : MonoBehaviour
         gamePlayPanel.SetActive(false);
         gameOverPanel.SetActive(true);
 
-        SetScoreTextInGameOverPanel();
-    }
-
-    private void SetScoreTextInGameOverPanel()
-    {
-        currentScore.text = score.score.ToString();
-        int best = PlayerPrefs.GetInt("Best_Score", 0);
-
-        if(score.score > best)  //Установили новый рекорд
-        {
-            newScoreTitle.SetActive(true);
-            bestScore.text = score.score.ToString();
-        }
-        else
-        {
-            newScoreTitle.SetActive(false);
-            bestScore.text = best.ToString();
-        }
+        score.SetScoreTextInGameOverPanel();
     }
 }

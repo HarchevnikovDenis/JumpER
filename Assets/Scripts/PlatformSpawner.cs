@@ -44,6 +44,7 @@ public class PlatformSpawner : MonoBehaviour
         platform.transform.localScale = new Vector2(scaleFactor, platform.transform.localScale.y);
         ResetGoldenZoneDefaultSize(platform, scaleFactor);
 
+        platform.transform.SetParent(transform);
         lastPlatform = platform.transform;
     }
 

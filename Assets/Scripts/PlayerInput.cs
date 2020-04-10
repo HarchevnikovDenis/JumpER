@@ -16,11 +16,13 @@ public class PlayerInput : MonoBehaviour
 
     private Transform platformTransform;
     private Score score;
+    private GamestatsManager stats;
 
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         score = FindObjectOfType<Score>();
+        stats = FindObjectOfType<GamestatsManager>();
     }
 
     private void Update()
@@ -37,7 +39,7 @@ public class PlayerInput : MonoBehaviour
             isEndOfPlatform = true;
         }
 
-        if(isFilled && !isEndOfPlatform && !GamestatsManager.isGameOver)
+        if(isFilled && !isEndOfPlatform && !stats.isGameOver)
         {
             GoRightSidePlatform(platformTransform);
         }
@@ -53,7 +55,7 @@ public class PlayerInput : MonoBehaviour
     private void Jump()
     {
         rigidbody.velocity = new Vector2(0.0f, jumpForce * slider.value);
-        GamestatsManager.speed = 7.5f;
+        stats.isMove = true;
     }
 
     //Приземление
@@ -61,9 +63,14 @@ public class PlayerInput : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Plane"))
         {
-            if (GamestatsManager.isInGoldenZone)            //Игрок упал точно в центр платформы
+            if (stats.isInGoldenZone)            //Игрок упал точно в центр платформы
             {
                 score.ExtraScore();
+
+                if (collision.gameObject.GetComponent<GoldEffect>()!= null)
+                {
+                    collision.gameObject.GetComponent<GoldEffect>().PlayGoldEffect();
+                }
             }
 
             isEndOfPlatform = false;
@@ -82,12 +89,12 @@ public class PlayerInput : MonoBehaviour
 
     private void GoRightSidePlatform(Transform platformTransform)
     {
-        if(transform.position.x > platformTransform.position.x + platformTransform.localScale.x)
+        if(transform.position.x >= platformTransform.position.x + platformTransform.localScale.x)
         {
             isEndOfPlatform = true;
             isFilled = false;
             slider.value = 0.0f;
-            GamestatsManager.speed = 0.0f;
+            stats.isMove = false;
 
             score.AddScore();
         }

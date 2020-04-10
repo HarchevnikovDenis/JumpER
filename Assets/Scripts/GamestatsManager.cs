@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GamestatsManager
+public class GamestatsManager : MonoBehaviour
 {
-    public static float speed = 0.0f;
-    public static bool isGameOver;
-    public static bool isInGoldenZone;
+    public bool isMove { get; set; }
+    public bool isGameOver { get; set; }
+    public bool isInGoldenZone { get; set; }
 }

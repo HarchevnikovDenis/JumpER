@@ -635,10 +635,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 578aa502-9dad-439b-a362-38dc3186dcdd
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: JumpER
+  organizationId: denisharchevnikov
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

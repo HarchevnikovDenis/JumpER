@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class GoldZoneTrigger : MonoBehaviour
 {
+    private GamestatsManager stats;
+
+    private void Start()
+    {
+        stats = FindObjectOfType<GamestatsManager>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.gameObject.GetComponent<PlayerInput>())
         {
-            GamestatsManager.isInGoldenZone = true;
+            stats.isInGoldenZone = true;
         }
     }
 
@@ -16,7 +23,7 @@ public class GoldZoneTrigger : MonoBehaviour
     {
         if(other.gameObject.GetComponent<PlayerInput>())
         {
-            GamestatsManager.isInGoldenZone = false;
+            stats.isInGoldenZone = false;
         }
     }
 }
